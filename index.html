@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    *,
+*::before,
+*::after{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html{
+    font-size: 60%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.music{
+    width: 100vw;
+    height: 100vh;
+    background-color: blanchedalmond;
+    display: grid;
+    place-items: center;
+}
+.music_container{
+
+        width: 35rem;
+        height: 55rem;
+        background-color: azure;
+        border-radius: 2rem;
+        box-shadow: 0 1.2rem 3rem 0.5rem black;
+        padding: 3rem;
+        text-align: center;    
+
+}
+.music_container #title{
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    word-spacing: 0.5rem;
+    color: black;
+    margin: 2rem 0 0.5rem 0;
+    font-size: 2.7rem;
+    font-weight: 500;
+    text-shadow: 0 0.3rem 0.5rem black ;
+
+}
+.music_container #movie{
+    color: cornflowerblue;
+    text-transform: capitalize;
+    letter-spacing: 0.1rem;
+    font-size: 2rem;
+    margin-bottom: 4rem;
+    font-weight: 300;
+}
+.image_container{
+    width: 23rem;
+    height: 23rem;
+    margin: auto;
+}
+img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 1.2rem 3rem 0.5rem gray;
+}
+.music_controls{
+    width: 20rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    margin-top: 2.7rem;
+}
+.music_controls .glyphicon{
+
+        color: black;
+        font-size: 2rem;
+        cursor: pointer;
+        filter: drop-shadow(0 1.2rem 3rem 0.5rem gray);
+
+}
+.music_controls .main_button{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+}
+.music_controls .glyphicon:hover{
+
+    color: gray;
+}
+.music_controls .main_button:hover{
+    background-color: white;
+    color: black;
+}
+.animate{
+    animation:rotateplayer 3s linear infinite;
+}
+@keyframes rotateplayer{
+    from{transform: rotate(0deg);}
+    to{transform: rotate(360deg);}
+}
+
+
+/*Progress style*/
+.progress_container{
+    width: 100%;
+    height: auto;
+    padding: 1rem 0;
+    margin-top: 1rem;
+
+}
+.progress_div{
+    width: 100%;
+    height: 0.5rem;
+    box-shadow: 0 1px 2px black ,0 2px 4px black,
+    0 4px 8px black,0 8px 16px black;
+  /*  0 16px 32px black , 0 32px 64px black;*/
+    border-radius: 4rem;
+    position: relative;
+    margin-top: 0.9rem;
+    transition: all 1s linear;
+    -moz-transition: all 1s linear;
+    -o-transition: all 1s linear;
+    -webkit-transition:  all 1s linear;
+    cursor: pointer;
+    appearance: none;
+}
+.progress{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: black;
+    border-radius: 4rem;
+  /*  transition: width 1s linear;
+    -moz-transition: width 1s linear;
+    -o-transition: width 1s linear;
+    -webkit-transition:  width 1s linear;*/
+    cursor: pointer;
+    appearance: none;
+}
+.progress_duration{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+   
+
+}
+footer{
+    background-color: aliceblue;
+    color: black;
+    width: 90%;
+    text-align: center;
+}
+footer h3{
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+
+</style>
+<body>
+    <div class="music">
+        <div class="music_container">
+            <h2 id="title">Raatia Lambiya</h2>
+            <h3 id="movie">Shersha</h3>
+            <div class="image_container">
+                <img src="01.jpg" alt="image">
+            </div>
+            <audio src="01.mp3"></audio>
+
+            <!--Progress Bar--->
+            <div class="progressbar_container" id="progress_container">
+                <div class="progress_duration">
+                    <div id="current_time">0:00</div>
+                    <div id="duration">0:00</div>
+                </div>
+                <div class="progress_div" id="progress_div">
+                    <div class="progress" id="progress"></div>
+                </div>
+
+                
+            </div>
+
+            <!--***********CONTROLS******-->
+           <div class="music_controls">
+    
+                <span class="glyphicon glyphicon-backward" id="prev" title="Previous"></span>
+                <span class="glyphicon glyphicon-play main_button" id="play" title="Play"></span>
+                <span class="glyphicon glyphicon-forward" id="next" title="Next"></span>  
+               <!-- <span class=" glyphicon glyphicon-pause"></span>-->
+               
+            </div>
+        </div>
+         <!--****************FOOTER*****************-->
+ 
+     <footer>
+        <h3>Divyanka jaiswal</h3>
+    </footer>
+    </div>
+    
+   <script>
+       const music = document.querySelector("audio");
+const img = document.querySelector("img");
+const play = document.getElementById("play");
+const title = document.getElementById("title");
+const movie = document.getElementById("movie");
+const prev = document.getElementById("prev");
+const next = document.getElementById("next");
+
+let progress = document.getElementById("progress");
+let t_duration = document.getElementById("duration");
+let current_time = document.getElementById("current_time");
+const progress_div = document.getElementById("progress_div");
+
+const songs = [
+ {
+    name:"01",
+    title: "Raataan Lambiyan",
+    movie: "Shershaah",
+ },
+ {
+    name:"02",
+    title: "Ranjhan",
+    movie: "Shershaah",
+ },
+ {
+    name:"03",
+    title: "Mann Bhariyaa 2.0",
+    movie: "Shershaah",
+ },
+ {
+    name:"04",
+    title: "Agar Tum Sath Ho",
+    movie: "Tamasha",
+ },
+ {
+    name:"05",
+    title: "Bekhayali",
+    movie: "Kabir Singh",
+ },
+ {
+    name:"06",
+    title: "Bulleya",
+    movie: "Aae Dil Hai Mushkil",
+ },
+ {
+    name:"07",
+    title: "Khariyat",
+    movie: "Chichore",
+ },
+ {
+    name:"08",
+    title: "Sanam Teri Kasam",
+    movie: "Sanam teri kasam",
+ },
+ {
+    name:"09",
+    title: "Duniya",
+    movie: "Lukka chuppi",
+ },
+ {
+    name:"10",
+    title: "Sanam Re",
+    movie: "sanam re",
+ },
+ 
+];
+
+let isplaying = false;
+//for Play
+const Playmusic = () => {
+  
+    isplaying = true;
+    music.play();
+    play.classList.replace("glyphicon-play","glyphicon-pause");
+    img.classList.add("animate");
+   
+}
+//for Pause
+const Pausemusic = () => {
+  
+  isplaying = false;
+  music.pause();
+  play.classList.replace("glyphicon-pause","glyphicon-play");
+  img.classList.remove("animate");
+ 
+}
+
+play.addEventListener("click",() =>{
+  if(isplaying)
+  {
+      Pausemusic();
+  }
+  else{
+      Playmusic();
+  }
+});
+
+//change previos next
+
+//change music data
+
+const lodesongs = (songs) =>{
+    title.textContent = songs.title;
+    movie.textContent = songs.movie;
+    music.src= songs.name + ".mp3";
+   // music.src =`music${songs.name}`;
+    img.src =  songs.name +".jpg";
+    //music.src =`music${songs.name}`;
+
+
+};
+let songindex = 0;
+//  lodesongs(songs[1]);
+const nextSong = () =>{
+    songindex = (songindex +1)% songs.length;
+    lodesongs(songs[songindex])
+    Playmusic();
+};
+const prevSong = () =>{
+    songindex = (songindex - 1 + songs.length) % songs.length;
+    lodesongs(songs[songindex]);
+    Playmusic();
+};
+
+
+//progress js work
+
+music.addEventListener('timeupdate',(event) =>{
+   // console.log(event);
+    const{currentTime,duration} = event.srcElement;
+   // console.log(currentTime);
+   
+
+    let progress_time = (currentTime/duration)*100;
+    progress.style.width =`${progress_time}%`;
+
+    //time update
+    // console.log(duration);
+     let minute_duration =Math.floor(duration / 60);
+     let second_duration = Math.floor(duration % 60);
+   //  console.log(minute_duration);
+    // console.log(second_duration);
+
+    let total_duration =`${minute_duration}:${second_duration}`;
+    if(duration){
+        t_duration.textContent = `${total_duration}`; 
+    }
+
+
+
+
+
+    // CURRENT TIME
+    let minute_currentTime =Math.floor(currentTime / 60);
+     let second_currentTime = Math.floor(currentTime % 60);
+   //  console.log(minute_currentTime);
+    // console.log(second_currentTime);
+
+   
+   if(second_currentTime){
+       second_currentTime =`0${second_currentTime}`;
+   }
+   let total_currentTime =`${minute_currentTime}:${second_currentTime}`;
+    current_time.textContent = `${total_currentTime}`; 
+  
+
+});
+//PROGRESS  ON CLICK
+progress_div.addEventListener("click", (event) =>{
+    //console.log(event);
+    const { duration } = music;
+    let move_progress = (event.offsetX / event.srcElement.clientWidth) * duration;
+   // console.log(move_progress)
+
+
+   music.currentTime = move_progress;
+})
+
+
+
+// IF MUSIC END NEXT SONG AUTOMATIC PLAY
+music.addEventListener("ended",nextSong)
+
+next.addEventListener('click',nextSong);
+prev.addEventListener('click',prevSong);
+
+
+
+
+
+
+
+   </script>
+
+</body>
+</html>
+
+
